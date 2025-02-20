@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package water_delivery;
 
-option go_package = "github.com/Pasca11/grpcServer/proto/gen:water_delivery";
+option go_package = "github.com/Pasca11/grpcServer/proto/gen;water_delivery";
 
 // Сервис доставки воды
 service WaterDeliveryService {

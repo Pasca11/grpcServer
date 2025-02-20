@@ -13,9 +13,9 @@ deps:
 
 # Генерация proto файлов
 proto:
-	protoc --go_out=. --go_opt=paths=source_relative \
-		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
-		$(PROTO_DIR)/*.proto
+	cd proto && protoc --go_out=gen --go_opt=paths=source_relative \
+		--go-grpc_out=gen --go-grpc_opt=paths=source_relative \
+		*.proto
 
 # Очистка сгенерированных файлов
 clean:

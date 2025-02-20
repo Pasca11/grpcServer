@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	pb "water_delivery/proto/gen"
+	pb "github.com/Pasca11/grpcServer/proto/gen"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc"

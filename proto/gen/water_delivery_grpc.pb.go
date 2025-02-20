@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.27.3
-// source: proto/water_delivery.proto
+// source: water_delivery.proto
 
-package gen_water_delivery
+package water_delivery
 
 import (
 	context "context"
@@ -163,5 +163,5 @@ var WaterDeliveryService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/water_delivery.proto",
+	Metadata: "water_delivery.proto",
 }
