@@ -85,7 +85,7 @@ func getStatusDescription(status pb.OrderStatusResponse_Status) string {
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":50051")
+	lis, err := net.Listen("tcp", ":8081")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
