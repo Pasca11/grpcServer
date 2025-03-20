@@ -10,6 +10,8 @@ service WaterDeliveryService {
   rpc CreateOrder(OrderRequest) returns (OrderResponse) {}
   // Получение статуса заказа
   rpc GetOrderStatus(OrderStatusRequest) returns (OrderStatusResponse) {}
+  // Получение всех заказов
+  rpc GetAllOrders(GetAllOrdersRequest) returns (GetAllOrdersResponse) {}
 }
 
 // Запрос на создание заказа
@@ -18,21 +20,6 @@ message OrderRequest {
   string delivery_address = 2;
   int32 bottles_count = 3;
   string phone_number = 4;
-  
-  // Массив тяжелых структур для тестирования производительности
-  repeated PerformanceTestData test_data = 5;
-}
-
-// Тяжелая структура данных для нагрузочного тестирования
-message PerformanceTestData {
-  string text_field = 1;
-  bytes binary_data = 2;
-  double numeric_value = 3;
-  int64 timestamp = 4;
-  repeated string string_array = 5;
-  repeated int32 int_array = 6;
-  bytes image_data = 7;
-  string long_text = 8;
 }
 
 // Ответ на создание заказа
@@ -48,13 +35,22 @@ message OrderStatusRequest {
 
 // Ответ со статусом заказа
 message OrderStatusResponse {
-  enum Status {
-    PENDING = 0;
-    CONFIRMED = 1;
-    IN_DELIVERY = 2;
-    DELIVERED = 3;
-    CANCELLED = 4;
-  }
-  Status status = 1;
+  string status = 1;
   string status_description = 2;
 } 
+
+message GetAllOrdersRequest {}
+
+message GetAllOrdersResponse {
+  repeated Order orders = 1;
+}
+
+message Order {
+  string order_id = 1;
+  string customer_name = 2;
+  string delivery_address = 3;
+  int32 bottles_count = 4;
+  string phone_number = 5;
+  string status = 6;
+  string status_description = 7;
+}

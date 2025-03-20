@@ -25,7 +25,7 @@ type Order struct {
 	DeliveryAddress string
 	BottlesCount    int32
 	PhoneNumber     string
-	Status          pb.OrderStatusResponse_Status
+	Status          string
 	CreatedAt       time.Time
 }
 
@@ -46,7 +46,7 @@ func (s *server) CreateOrder(ctx context.Context, req *pb.OrderRequest) (*pb.Ord
 		DeliveryAddress: req.DeliveryAddress,
 		BottlesCount:    req.BottlesCount,
 		PhoneNumber:     req.PhoneNumber,
-		Status:          pb.OrderStatusResponse_PENDING,
+		Status:          "pending",
 		CreatedAt:       time.Now(),
 	}
 
@@ -57,32 +57,49 @@ func (s *server) CreateOrder(ctx context.Context, req *pb.OrderRequest) (*pb.Ord
 }
 
 func (s *server) GetOrderStatus(ctx context.Context, req *pb.OrderStatusRequest) (*pb.OrderStatusResponse, error) {
-	order, exists := s.orders[req.OrderId]
+	_, exists := s.orders[req.OrderId]
 	if !exists {
 		return nil, status.Error(codes.NotFound, "заказ не найден")
 	}
 
 	return &pb.OrderStatusResponse{
-		Status:            order.Status,
-		StatusDescription: getStatusDescription(order.Status),
+		Status:            "pending",
+		StatusDescription: "Заказ обрабатывается",
 	}, nil
 }
 
-func getStatusDescription(status pb.OrderStatusResponse_Status) string {
-	switch status {
-	case pb.OrderStatusResponse_PENDING:
-		return "Заказ обрабатывается"
-	case pb.OrderStatusResponse_CONFIRMED:
-		return "Заказ подтвержден"
-	case pb.OrderStatusResponse_IN_DELIVERY:
-		return "Заказ в пути"
-	case pb.OrderStatusResponse_DELIVERED:
-		return "Заказ доставлен"
-	case pb.OrderStatusResponse_CANCELLED:
-		return "Заказ отменен"
-	default:
-		return "Неизвестный статус"
+func (s *server) GetAllOrders(ctx context.Context, req *pb.GetAllOrdersRequest) (*pb.GetAllOrdersResponse, error) {
+	orders := []*pb.Order{
+		{
+			OrderId:           "1",
+			CustomerName:      "John Doe",
+			DeliveryAddress:   "123 Main St",
+			BottlesCount:      10,
+			PhoneNumber:       "1234567890",
+			Status:            "pending",
+			StatusDescription: "Заказ обрабатывается",
+		},
+		{
+			OrderId:           "2",
+			CustomerName:      "Jane Smith",
+			DeliveryAddress:   "456 Oak Ave",
+			BottlesCount:      5,
+			PhoneNumber:       "0987654321",
+			Status:            "confirmed",
+			StatusDescription: "Заказ подтвержден",
+		},
+		{
+			OrderId:           "3",
+			CustomerName:      "Alice Johnson",
+			DeliveryAddress:   "789 Pine Rd",
+			BottlesCount:      20,
+			PhoneNumber:       "1122334455",
+			Status:            "in_delivery",
+			StatusDescription: "Заказ в пути",
+		},
 	}
+
+	return &pb.GetAllOrdersResponse{Orders: orders}, nil
 }
 
 func main() {

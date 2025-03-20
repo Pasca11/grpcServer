@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	WaterDeliveryService_CreateOrder_FullMethodName    = "/water_delivery.WaterDeliveryService/CreateOrder"
 	WaterDeliveryService_GetOrderStatus_FullMethodName = "/water_delivery.WaterDeliveryService/GetOrderStatus"
+	WaterDeliveryService_GetAllOrders_FullMethodName   = "/water_delivery.WaterDeliveryService/GetAllOrders"
 )
 
 // WaterDeliveryServiceClient is the client API for WaterDeliveryService service.
@@ -33,6 +34,8 @@ type WaterDeliveryServiceClient interface {
 	CreateOrder(ctx context.Context, in *OrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 	// Получение статуса заказа
 	GetOrderStatus(ctx context.Context, in *OrderStatusRequest, opts ...grpc.CallOption) (*OrderStatusResponse, error)
+	// Получение всех заказов
+	GetAllOrders(ctx context.Context, in *GetAllOrdersRequest, opts ...grpc.CallOption) (*GetAllOrdersResponse, error)
 }
 
 type waterDeliveryServiceClient struct {
@@ -63,6 +66,16 @@ func (c *waterDeliveryServiceClient) GetOrderStatus(ctx context.Context, in *Ord
 	return out, nil
 }
 
+func (c *waterDeliveryServiceClient) GetAllOrders(ctx context.Context, in *GetAllOrdersRequest, opts ...grpc.CallOption) (*GetAllOrdersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllOrdersResponse)
+	err := c.cc.Invoke(ctx, WaterDeliveryService_GetAllOrders_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // WaterDeliveryServiceServer is the server API for WaterDeliveryService service.
 // All implementations must embed UnimplementedWaterDeliveryServiceServer
 // for forward compatibility.
@@ -73,6 +86,8 @@ type WaterDeliveryServiceServer interface {
 	CreateOrder(context.Context, *OrderRequest) (*OrderResponse, error)
 	// Получение статуса заказа
 	GetOrderStatus(context.Context, *OrderStatusRequest) (*OrderStatusResponse, error)
+	// Получение всех заказов
+	GetAllOrders(context.Context, *GetAllOrdersRequest) (*GetAllOrdersResponse, error)
 	mustEmbedUnimplementedWaterDeliveryServiceServer()
 }
 
@@ -88,6 +103,9 @@ func (UnimplementedWaterDeliveryServiceServer) CreateOrder(context.Context, *Ord
 }
 func (UnimplementedWaterDeliveryServiceServer) GetOrderStatus(context.Context, *OrderStatusRequest) (*OrderStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrderStatus not implemented")
+}
+func (UnimplementedWaterDeliveryServiceServer) GetAllOrders(context.Context, *GetAllOrdersRequest) (*GetAllOrdersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllOrders not implemented")
 }
 func (UnimplementedWaterDeliveryServiceServer) mustEmbedUnimplementedWaterDeliveryServiceServer() {}
 func (UnimplementedWaterDeliveryServiceServer) testEmbeddedByValue()                              {}
@@ -146,6 +164,24 @@ func _WaterDeliveryService_GetOrderStatus_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _WaterDeliveryService_GetAllOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllOrdersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WaterDeliveryServiceServer).GetAllOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WaterDeliveryService_GetAllOrders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WaterDeliveryServiceServer).GetAllOrders(ctx, req.(*GetAllOrdersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // WaterDeliveryService_ServiceDesc is the grpc.ServiceDesc for WaterDeliveryService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -160,6 +196,10 @@ var WaterDeliveryService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOrderStatus",
 			Handler:    _WaterDeliveryService_GetOrderStatus_Handler,
+		},
+		{
+			MethodName: "GetAllOrders",
+			Handler:    _WaterDeliveryService_GetAllOrders_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
