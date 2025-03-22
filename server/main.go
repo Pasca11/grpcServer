@@ -36,20 +36,7 @@ func NewServer() *server {
 }
 
 func (s *server) CreateOrder(ctx context.Context, req *pb.OrderRequest) (*pb.OrderResponse, error) {
-	if req.BottlesCount <= 0 {
-		return nil, status.Error(codes.InvalidArgument, "количество бутылок должно быть больше 0")
-	}
-
 	orderId := uuid.New().String()
-	s.orders[orderId] = &Order{
-		CustomerName:    req.CustomerName,
-		DeliveryAddress: req.DeliveryAddress,
-		BottlesCount:    req.BottlesCount,
-		PhoneNumber:     req.PhoneNumber,
-		Status:          "pending",
-		CreatedAt:       time.Now(),
-	}
-
 	return &pb.OrderResponse{
 		OrderId:               orderId,
 		EstimatedDeliveryTime: time.Now().Add(2 * time.Hour).Format(time.RFC3339),
