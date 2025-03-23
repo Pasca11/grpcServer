@@ -84,6 +84,24 @@ func (s *server) GetAllOrders(ctx context.Context, req *pb.GetAllOrdersRequest) 
 			Status:            "in_delivery",
 			StatusDescription: "Заказ в пути",
 		},
+		{
+			OrderId:           "4",
+			CustomerName:      "Bob Brown",
+			DeliveryAddress:   "101 Maple St",
+			BottlesCount:      15,
+			PhoneNumber:       "9988776655",
+			Status:            "delivered",
+			StatusDescription: "Заказ доставлен",
+		},
+		{
+			OrderId:           "5",
+			CustomerName:      "Charlie Davis",
+			DeliveryAddress:   "222 Cedar Ave",
+			BottlesCount:      30,
+			PhoneNumber:       "5554443322",
+			Status:            "cancelled",
+			StatusDescription: "Заказ отменен",
+		},
 	}
 
 	return &pb.GetAllOrdersResponse{Orders: orders}, nil
